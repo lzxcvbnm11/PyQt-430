@@ -50,7 +50,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         串口检测
         """
-        self.lzx_test()
         print("cfun" + str(cfun.add_int(1, 2)))
         print("lzx add check clicked")
         # 检测所有存在的串口，将信息存储在字典中
