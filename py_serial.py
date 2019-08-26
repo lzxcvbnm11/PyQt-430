@@ -49,14 +49,15 @@ if ser.isOpen():
         tx_len = int(sys.argv[1])
    
     #1 读取文件内容，写入com
-    print("tx_len")
     com_buf_tag = c_char * 16
     com_rx_buf = com_buf_tag()
     cfun.get_tx_buf.argtypes = [POINTER(c_char), c_int]
     cfun.get_tx_buf(com_rx_buf, 16)
-   
+    
+    #in test so not use serial 
     num = ser.write(com_rx_buf)
-    print("py serial write num = "+ str(num))
+    
+    #print("py serial write num = "+ str(num))
   
     time.sleep(0.1)
     try:
@@ -78,7 +79,7 @@ if ser.isOpen():
         for i in range(0, len(data)):
             out_s = out_s + '{:02X}'.format(data[i]) + ' '
         #print("recv:")
-        print(out_s)
+        #print(out_s)
         #print("reclen:" + str(len(data)))
         if len(data) != 16:
            print("com read error num not is 16")

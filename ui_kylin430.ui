@@ -533,7 +533,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="comboBox_11">
+        <widget class="QComboBox" name="comboBox_stream_type">
          <item>
           <property name="text">
            <string>以太网L2</string>

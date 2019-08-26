@@ -42,7 +42,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     """
     PTP_1588_BASE_ADDR = 0x5c4800
     MAC_PHY_BASE_ADDR = 0x5c400
-        
+    ptp_stream_type = 0
     def __init__(self, parent=None):
         """
         Constructor
@@ -61,9 +61,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # TODO: not implemented yet
         raise NotImplementedError
     
-    def lzx_test(self):
-        print("lzx add test function")
-        
     @pyqtSlot()
     def on_pushButton_4_portcheck_clicked(self):
         """
@@ -96,15 +93,92 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         
         SMAC = self.lineEdit_Smac0.text()
-        isHexRes = re.search('[^0-9|a-f|A-F]', SMAC, 0)
+
+        compile_mac=re.compile('^[A-Fa-f\d]{2}:[A-Fa-f\d]{2}:[A-Fa-f\d]{2}:[A-Fa-f\d]{2}:[A-Fa-f\d]{2}:[A-Fa-f\d]{2}$')
         
-        if isHexRes == None and SMAC != None:
-            SMAC = "0x" + SMAC
-            print(SMAC)
-            SMAC = int(SMAC, 16)
-            print("data = " + str(SMAC))
+        if compile_mac.match(SMAC):
+            print("mac correnct")
+            mac_type = c_uint8 *  6
+            mac_buf = mac_type()
+            mac_list = SMAC.split(":", SMAC.count(":"))
+            for i in range(0, SMAC.count(":") + 1):
+                mac_list[i] = "0x" + mac_list[i]
+                print("%x"%(int(mac_list[i], 16)))
+                mac_buf[i] = int(mac_list[i], 16) & 0xff
             
-       
+            kylin_api.kylin_smac_set.argtypes = [c_uint, POINTER(c_uint8)]
+            kylin_api.kylin_smac_set(0, mac_buf)
+        else:
+            print("mac error")
+            
+    def upack_ipv6(self, ipaddr):
+        ipaddr_len = len(ipaddr)
+        # not use :: is 7    use ::  : num <= 7
+        cnt = 7 - ipaddr.count(":")
+        cnf_flag = 0
+        j = 0
+        sip_type = c_char * 16
+        sip_buf = sip_type()
+        ipv6_offset = ipaddr.find("::", 0, ipaddr_len)
+        
+        if ipv6_offset != -1:
+            for i in range(0, ipv6_offset):
+                if ipaddr[i] == ':':
+                    cnf_flag = cnf_flag + 1
+                    print("cnf_flag " + str(cnf_flag))
+            sip_list = ipaddr.split(":", ipaddr.count(":"))   
+            for i in range(0,ipaddr.count(":") + 1):
+                print(sip_list[i])
+                if i == cnf_flag:
+                    for k in range(0, cnt + 1 ):
+                        i = k + i
+                        index = 2 * i
+                        sip_buf[i] = 0
+                        #print("%x"%(sip_buf[i]))
+                        index = index + 1
+                        sip_buf[index] = 0
+                        print(":: index = " + str(index))
+                        #print("%x"%(sip_buf[index]))
+                    print(" i = " + str(i))
+                elif i < cnf_flag :
+                    sip_list[i] = "0x" + sip_list[i]
+                    tmp = int(sip_list[i], 16)
+                    index = i*2
+                    sip_buf[index] = tmp & 0xff
+                    #print("%x"%(sip_buf[index]))
+                    index = index + 1
+                    sip_buf[index] = ((tmp >> 8) & 0xff)
+                    #print("%x"%(sip_buf[index]))
+                elif i > cnf_flag:
+                    print("--- i = " + str(i))
+                    if  sip_list[i] != "":
+                        print("--- i = " + str(i))
+                        sip_list[i] = "0x" + sip_list[i]
+                        tmp = int(sip_list[i], 16)
+                        index = (i + cnt + 1 - 1)*2
+                        print("index = " + str(index))
+                        sip_buf[index] = tmp & 0xff
+                        #print("%x"%(sip_buf[index]))
+                        index = index + 1
+                        sip_buf[index] = ((tmp >> 8) & 0xff)
+                    #print("%x"%(sip_buf[index]))
+                    
+        else:
+            sip_list = ipaddr.split(":", ipaddr.count(":"))
+            for i in range(0, ipaddr.count(":") + 1):
+                print(sip_list[i])
+                sip_list[i] = "0x" + sip_list[i]
+                tmp = int(sip_list[i], 16)
+                index = i*2
+                sip_buf[index] = tmp & 0xff
+                #print("%x"%(sip_buf[index]))
+                index = index + 1
+                sip_buf[index] = ((tmp >> 8) & 0xff)
+                #print("%x"%(sip_buf[index]))
+                    
+        return sip_buf
+                
+        
     @pyqtSlot(str)
     def on_lineEdit_SIP_textChanged(self, p0):
         """
@@ -114,13 +188,44 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         @type str
         """
         ipaddr = self.lineEdit_SIP.text()
-        
+        isipv4 = 0
+        isipv6 = 0
+        # current select is ipv4 or ipv6
+        if self.ptp_stream_type == 1 or self.ptp_stream_type == 4:
+            compile_ip=re.compile('^(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|[1-9])\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)$')
+            if compile_ip.match(ipaddr):
+                print("ipv4 correnct")
+                sip_type = c_uint8 * 16
+                sip_buf = sip_type()
+                sip_list = ipaddr.split(".", ipaddr.count("."))
+                for i in range(0, ipaddr.count(".") + 1):
+                    sip_list[i] = int(sip_list[i])
+                    sip_buf[i] = sip_list[i] & 0xff
+                    print("%d"%(sip_buf[i]))
+                kylin_api.kylin_sip_set.argvtypes = [c_int, POINTER(c_uint8)]
+                kylin_api.kylin_sip_set(0, sip_buf)
+                
+            else:
+                print("ipv4 is error")
+        #ipv6
+        elif self.ptp_stream_type == 2 or self.ptp_stream_type == 5:
+            compile_ip = re.compile('^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:)|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}(:[0-9A-Fa-f]{1,4}){1,2})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){1,3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){1,4})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){1,5})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){1,6})|(:(:[0-9A-Fa-f]{1,4}){1,7})|(([0-9A-Fa-f]{1,4}:){6}(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){0,4}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(:(:[0-9A-Fa-f]{1,4}){0,5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}))$')
+            if compile_ip.match(ipaddr):
+                print("correnct")
+                sip_type = c_uint8 * 16
+                sip_buf = sip_type()
+                sip_buf = self.upack_ipv6(ipaddr)
+                
+            else:
+                print("error")
+
+            
         """
         compile_ip=re.compile('^(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|[1-9])\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)$')
         if compile_ip.match(ipaddr):
-            print("correnct")
+            print("ip correnct")
         else:
-            print("error")
+            print("ip error")
         """
         
         """
@@ -128,11 +233,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ^([\\da-fA-F]{1,4}:){7}([\\da-fA-F]{1,4})$
         ^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:)|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}(:[0-9A-Fa-f]{1,4}){1,2})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){1,3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){1,4})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){1,5})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){1,6})|(:(:[0-9A-Fa-f]{1,4}){1,7})|(([0-9A-Fa-f]{1,4}:){6}(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){0,4}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(:(:[0-9A-Fa-f]{1,4}){0,5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}))$
         """
+        
+        """
         compile_ip = re.compile('^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:)|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}(:[0-9A-Fa-f]{1,4}){1,2})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){1,3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){1,4})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){1,5})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){1,6})|(:(:[0-9A-Fa-f]{1,4}){1,7})|(([0-9A-Fa-f]{1,4}:){6}(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){0,4}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(:(:[0-9A-Fa-f]{1,4}){0,5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}))$')
         if compile_ip.match(ipaddr):
             print("correnct")
         else:
             print("error")
+        """
         
         """
         try:
@@ -190,7 +298,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         cfun.py_serial_read.argtpyes = [c_int]
         cfun.py_serial_read(reg)
         
-    
+    @pyqtSlot(str)
+    def on_comboBox_stream_type_currentIndexChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type str
+        """
+        #print(p0)
+        self.ptp_stream_type = self.comboBox_stream_type.currentIndex()
+        #print(str(self.ptp_stream_type))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

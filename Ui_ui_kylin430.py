@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Users\Administrator\Desktop\lzx\python\kylin430\ui_kylin430.ui'
+# Form implementation generated from reading ui file 'C:\Users\Administrator\Desktop\lzx\kylin430\ui_kylin430.ui'
 #
 # Created by: PyQt5 UI code generator 5.13.0
 #
@@ -223,15 +223,15 @@ class Ui_MainWindow(object):
         self.label_8 = QtWidgets.QLabel(self.formLayoutWidget_2)
         self.label_8.setObjectName("label_8")
         self.formLayout_2.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label_8)
-        self.comboBox_11 = QtWidgets.QComboBox(self.formLayoutWidget_2)
-        self.comboBox_11.setObjectName("comboBox_11")
-        self.comboBox_11.addItem("")
-        self.comboBox_11.addItem("")
-        self.comboBox_11.addItem("")
-        self.comboBox_11.addItem("")
-        self.comboBox_11.addItem("")
-        self.comboBox_11.addItem("")
-        self.formLayout_2.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.comboBox_11)
+        self.comboBox_stream_type = QtWidgets.QComboBox(self.formLayoutWidget_2)
+        self.comboBox_stream_type.setObjectName("comboBox_stream_type")
+        self.comboBox_stream_type.addItem("")
+        self.comboBox_stream_type.addItem("")
+        self.comboBox_stream_type.addItem("")
+        self.comboBox_stream_type.addItem("")
+        self.comboBox_stream_type.addItem("")
+        self.comboBox_stream_type.addItem("")
+        self.formLayout_2.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.comboBox_stream_type)
         self.label_9 = QtWidgets.QLabel(self.formLayoutWidget_2)
         self.label_9.setObjectName("label_9")
         self.formLayout_2.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_9)
@@ -573,12 +573,12 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "config"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "clk"))
         self.label_8.setText(_translate("MainWindow", "流类型"))
-        self.comboBox_11.setItemText(0, _translate("MainWindow", "以太网L2"))
-        self.comboBox_11.setItemText(1, _translate("MainWindow", "IPV4"))
-        self.comboBox_11.setItemText(2, _translate("MainWindow", "IPV6"))
-        self.comboBox_11.setItemText(3, _translate("MainWindow", "802.3的L2"))
-        self.comboBox_11.setItemText(4, _translate("MainWindow", "802.3的IPV4"))
-        self.comboBox_11.setItemText(5, _translate("MainWindow", "802.3的IPV6"))
+        self.comboBox_stream_type.setItemText(0, _translate("MainWindow", "以太网L2"))
+        self.comboBox_stream_type.setItemText(1, _translate("MainWindow", "IPV4"))
+        self.comboBox_stream_type.setItemText(2, _translate("MainWindow", "IPV6"))
+        self.comboBox_stream_type.setItemText(3, _translate("MainWindow", "802.3的L2"))
+        self.comboBox_stream_type.setItemText(4, _translate("MainWindow", "802.3的IPV4"))
+        self.comboBox_stream_type.setItemText(5, _translate("MainWindow", "802.3的IPV6"))
         self.label_9.setText(_translate("MainWindow", "ClockLevel"))
         self.label_23.setText(_translate("MainWindow", "Priority1"))
         self.label_24.setText(_translate("MainWindow", "Priority2"))
