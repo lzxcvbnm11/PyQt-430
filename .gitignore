@@ -4,3 +4,5 @@ _erci6project
 __pycache__
 _eric6project
 *.spec
+dist
+WinC/kylin_sdk/

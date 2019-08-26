@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -616,22 +616,22 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_2"/>
+        <widget class="QLineEdit" name="lineEdit_Smac0"/>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_4"/>
+        <widget class="QLineEdit" name="lineEdit_Smac1"/>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_5"/>
+        <widget class="QLineEdit" name="lineEdit_Smac2"/>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_6"/>
+        <widget class="QLineEdit" name="lineEdit_Smac3"/>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_7"/>
+        <widget class="QLineEdit" name="lineEdit_Smac4"/>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_3"/>
+        <widget class="QLineEdit" name="lineEdit_Smac5"/>
        </item>
       </layout>
      </widget>
@@ -653,52 +653,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_8"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_10"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_11"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_12"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_13"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_9"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_14"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_16"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_17"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_22"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_21"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_20"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_23"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_18"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_19"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_15"/>
+        <widget class="QLineEdit" name="lineEdit_SIP"/>
        </item>
       </layout>
      </widget>
@@ -774,14 +729,14 @@
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
-         <widget class="QRadioButton" name="radioButton">
+         <widget class="QRadioButton" name="radioButton_unicast">
           <property name="text">
            <string>单播</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="radioButton_2">
+         <widget class="QRadioButton" name="radioButton_multicase">
           <property name="text">
            <string>组播</string>
           </property>
