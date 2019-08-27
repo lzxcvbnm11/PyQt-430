@@ -574,7 +574,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="lineEdit_37"/>
+        <widget class="QLineEdit" name="lineEdit_ClockLevel"/>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_23">
@@ -591,10 +591,10 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLineEdit" name="lineEdit_51"/>
+        <widget class="QLineEdit" name="lineEdit_Priority1"/>
        </item>
        <item row="3" column="1">
-        <widget class="QLineEdit" name="lineEdit_52"/>
+        <widget class="QLineEdit" name="lineEdit_Priority2"/>
        </item>
       </layout>
      </widget>
@@ -675,34 +675,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_27"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_28"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_29"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_35"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_36"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_34"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_30"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_33"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_31"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_32"/>
+        <widget class="QLineEdit" name="lineEdit_PortId"/>
        </item>
       </layout>
      </widget>
@@ -802,34 +775,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit_38"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_39"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_40"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_41"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_42"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_43"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_44"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_45"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_46"/>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="lineEdit_47"/>
+        <widget class="QLineEdit" name="lineEdit_sourcePortId"/>
        </item>
       </layout>
      </widget>
@@ -1007,10 +953,262 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="comboBox_12"/>
+         <widget class="QComboBox" name="comboBox_announce_rate">
+          <item>
+           <property name="text">
+            <string>-14</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-13</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-12</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-11</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-10</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-9</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-8</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-7</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-6</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-5</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-4</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>0</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>4</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>5</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>6</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>7</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>8</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>9</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>10</string>
+           </property>
+          </item>
+         </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QComboBox" name="comboBox_13"/>
+         <widget class="QComboBox" name="comboBox_event_rate">
+          <item>
+           <property name="text">
+            <string>-14</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-13</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-12</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-11</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-10</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-9</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-8</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-7</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-6</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-5</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-4</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>-1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>0</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>1</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>3</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>4</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>5</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>6</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>7</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>8</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>9</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>10</string>
+           </property>
+          </item>
+         </widget>
         </item>
        </layout>
       </widget>
