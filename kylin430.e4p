@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project kylin430 -->
-<!-- Saved: 2019-08-19, 19:07:20 -->
+<!-- Saved: 2019-08-26, 19:46:56 -->
 <!-- Copyright (C) 2019 ,  -->
 <Project version="5.1">
   <Language></Language>
@@ -15,6 +15,7 @@
   <Sources>
     <Source>Ui_ui_kylin430.py</Source>
     <Source>__init__.py</Source>
+    <Source>py_serial.py</Source>
     <Source>ui_kylin430.py</Source>
   </Sources>
   <Forms>
