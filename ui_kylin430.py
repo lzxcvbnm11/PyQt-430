@@ -3,8 +3,6 @@
 """
 Module implementing MainWindow.
 """
-
-print("------------start-----------------")
 import sys, os
 if hasattr(sys, 'frozen'):
     os.environ['PATH'] = sys._MEIPASS + ";" + os.environ['PATH'] + ";" + os.path.abspath(__file__)
@@ -13,12 +11,11 @@ from ctypes import cdll
 import ctypes
 import socket
 
-print("------------CDLL-----------------")
 p = os.getcwd() + './WinC/adder.so'
 cfun = cdll.LoadLibrary(p)
 #cfun=CDLL('adder.so')
-
-print("------------CDLL complete-----------------")
+p = os.getcwd() + './WinC/kylin_api.so'
+kylin_api = cdll.LoadLibrary(p)
 #kylin_api = CDLL('kylin_api.so')
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import pyqtSlot
@@ -45,10 +42,9 @@ class PTP_PORT_config(Structure):
     ('smac_correct', c_uint8), 
     ('sip_correct', c_uint8), 
     ('local_port_correct', c_uint8),
-    ('dmac_correct', c_uint8),
-    ('dip_correct', c_uint8),
     ('source_port_correct', c_uint8),
     ('flow', c_uint32), 
+    ('slave_select', c_uint8), 
     ]
 class ptp_table4_tag(Structure):
     _fields_ = [
@@ -168,6 +164,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             kylin_api.kylin_smac_set.argtypes = [c_uint, POINTER(c_uint8)]
             kylin_api.kylin_smac_set(0, mac_buf)
         else:
+            self.ptp_port0_config.smac_correct = 0
             print("mac error")
             
     def upack_ipv6(self, ipaddr):
@@ -265,6 +262,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 kylin_api.kylin_sip_set(0, sip_buf)
                 
             else:
+                self.ptp_port0_config.sip_correct = 0
                 print("ipv4 is error")
         #ipv6
         elif self.ptp_stream_type == 2 or self.ptp_stream_type == 5:
@@ -446,6 +444,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         portid = re.compile('^([1-9A-Fa-f]{2}:){9}[1-9A-Fa-f]{2}$')
         
         if portid.match(portid_text):
+            ptp_port0_config.local_port_correct = 1
             print("port is correct")
             portid_type = c_uint8 * 10
             portid_buf = portid_type()
@@ -457,6 +456,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 kylin_api.kylin_ptp_local_portId_set.argvtypes = [c_uint32, POINTER(c_uint8)]
                 kylin_api.kylin_ptp_local_portId_set(0, portid_buf)
         else:
+            ptp_port0_config.local_port_correct = 0
             print("port is eror")
             
     @pyqtSlot(str)
@@ -472,6 +472,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         portid = re.compile('^([1-9A-Fa-f]{2}:){9}[1-9A-Fa-f]{2}$')
         
         if portid.match(portid_text):
+            ptp_port0_config.source_port_correct = 0
             print("port is correct")
             portid_type = c_uint8 * 10
             portid_buf = portid_type()
@@ -488,6 +489,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 kylin_api.kylin_ptp_bmc_sourceportId_set.argvtypes = [c_uint32, PortIdentity]
                 kylin_api.kylin_ptp_bmc_sourceportId_set(0, portId)
         else:
+            ptp_port0_config.source_port_correct = 0
             print("port is eror")
             
     @pyqtSlot(int)
@@ -536,7 +538,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         kylin_api.kylin_ptp_msg_cast_ctl_set.argvtypes = [c_uint32, c_uint32,  c_uint32 , c_uint32]
         kylin_api.kylin_ptp_msg_cast_ctl_set(0, cast_type, announce_index, event_index)
         #config table 1 业务模板内容
-    
+        
     @pyqtSlot(str)
     def on_lineEdit_dmac_textChanged(self, p0):
         """
@@ -548,61 +550,235 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         flow 0
         """ 
+        ip_format_error =  "correct"
+        mac_format_error = "correct"
+        vlan_format_error = "correct"
+        out_vlan_format_error = "correct"
+        tpid_format_error = "correct"
+        
+        # setup 1 构建白名单buff 和组播mac buf    
         whiletable_type = c_uint8 *  18
         whiletable_buf = whiletable_type() 
-        
-        #slave mode
-        slave_mode_en = 0
-        
+        multicast_mac_buf = whiletable_type()
+        for i in range(6):
+            multicast_mac_buf[i] = 0
+            
+        multicast_mac_buf[0] = 0x01
+        multicast_mac_buf[1] = 0x1b
+        multicast_mac_buf[2] = 0x19
+        #setup 2 获取vlan信息
         type = self.ptp_port0_config.vlan_type * 3 + self.ptp_port0_config.stream_data_type
-        index = 0
-        #无valn 白名单不用填，一层vlan的 占用两个字节， 二层vlan 占用6个字节
-        if self.ptp_port0_config.vlan_type == 1:
-            #一层vlan
-            index = 2
-            whiletable_buf[0] = ((self.ptp_port0_config.vlan) ) | 0xff
-            whiletable_buf[0] = ((self.ptp_port0_config.vlan) >> 8) | 0xff 
-        elif self.ptp_port0_config.vlan_type == 2:
-            index = 5
-            #又疑问，未完成
-            whiletable_buf[0] = ((self.ptp_port0_config.vlan) ) | 0xff
-            whiletable_buf[0] = ((self.ptp_port0_config.vlan) >> 8) | 0xff 
-        
+        """
+        self.lineEdit_ClockLevel.setValidator(QtGui.QIntValidator())
+        text = self.lineEdit_ClockLevel.text()
+        if  text.isdecimal() == False:
+            return
+        clock_level = int (self.lineEdit_ClockLevel.text())
+        kylin_api.kylin_ptp_clocklevel_set.argvtypes = [c_uint32, c_uint32]
+        kylin_api.kylin_ptp_clocklevel_set(0, clock_level)
+        """
+        vlan_type = 1 #是否带有vlan #------------notice this is not complete
+        vlan = 0
+        out_vlan = 0
+        tpid = 0
+        if vlan_type == 1:
+            #------------notice this is not complete
+            vlan = 1
+        #------------notice this is not complete
+        elif vlan_type == 2:
+            vlan = 1
+            out_vlan = 2
+            tpid = 3
+        #steup 3 获取dmac信息
+        mac_type = c_uint8 * 6
+        mac_buf = mac_type()
         SMAC = self.lineEdit_Smac0.text()
-
         compile_mac=re.compile('^[A-Fa-f\d]{2}:[A-Fa-f\d]{2}:[A-Fa-f\d]{2}:[A-Fa-f\d]{2}:[A-Fa-f\d]{2}:[A-Fa-f\d]{2}$')
-        
         if compile_mac.match(SMAC):
             print("mac correnct")
-            self.ptp_port0_config.dmac_correct = 1
             #print("test ---" + str(self.ptp_port0_config.smac_correct))
             mac_list = SMAC.split(":", SMAC.count(":"))
             for i in range(0, SMAC.count(":") + 1):
-                index = i + index
                 mac_list[i] = "0x" + mac_list[i]
                 print("%x"%(int(mac_list[i], 16)))
                 tmp = int(mac_list[i], 16) & 0xff
+                mac_buf[i] = tmp
                 #mask is 0xff
-                whiletable_buf[index] = (tmp<< 8) | 0xff
-            
-            #this is coonfig whitetable
-            # port index type val 
-            kylin_api.kylin_ptp_whitetable_set.argtypes = [c_uint32,c_uint32, c_uint32,  POINTER(c_uint16)]
-            kylin_api.kylin_smac_set(0, 0, type, whiletable_buf)
-            
-            #config table 4 config dmac and vlan
-            table4 = ptp_table4_tag()
-            for i in range(0, 6):
-                table4[i] = int(mac_list[i], 16)
-            table4.tpid = self.ptp_port0_config.outertpid
-            table4.outervlan = self.ptp_port0_config.outervlan
-            table4.innervlan = self.ptp_port0_config.innervlan
-            kylin_api.kylin_ptp_table4_set.argvtypes = [c_uint32, c_uint32, POINTER(ptp_table4_tag)]
-            if self.ptp_port0_config.cast_type == 1 or slave_mode_en == 1:
-                kylin_api.kylin_ptp_table4_set(0, 0, byref(table4))
-                
+                #whiletable_buf[index] = (tmp<< 8) | 0xff
         else:
-            print("mac error")
+            mac_format_error = "error"
+            print("mac have error")
+        
+        #setup 4 set dip
+        ipaddr = self.lineEdit_SIP.text()
+        dip_type = c_uint8 * 16
+        dip_buf = sip_type()
+        # current select is ipv4 or ipv6
+        if self.ptp_stream_type == 1 or self.ptp_stream_type == 4:
+            compile_ip=re.compile('^(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|[1-9])\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)$')
+            if compile_ip.match(ipaddr):
+                print("ipv4 correnct")
+                ptp_port0_config.sip
+                dip_list = ipaddr.split(".", ipaddr.count("."))
+                for i in range(0, ipaddr.count(".") + 1):
+                    dip_list[i] = int(dip_list[i])
+                    dip_buf[i] = dip_list[i] & 0xff
+                    print("%d"%(sip_buf[i]))
+            else:
+                ip_format_error = "error"
+                print("ipv4 is error")
+        #ipv6
+        elif self.ptp_stream_type == 2 or self.ptp_stream_type == 5:
+            compile_ip = re.compile('^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:)|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}(:[0-9A-Fa-f]{1,4}){1,2})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){1,3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){1,4})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){1,5})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){1,6})|(:(:[0-9A-Fa-f]{1,4}){1,7})|(([0-9A-Fa-f]{1,4}:){6}(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){0,4}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(:(:[0-9A-Fa-f]{1,4}){0,5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}))$')
+            if compile_ip.match(ipaddr):
+                print("correnct")
+                dip_buf = self.upack_ipv6(ipaddr)
+            else:
+                ip_format_error = "error"
+                print("error")
+        #setup 5 检查格式错误
+        if ptp_port0_config.local_port_correct != 1 or ptp_port0_config.sip_correct != 1 or ptp_port0_config.smac_correct != 1 or ptp_port0_config.source_port_correct != 1:
+            if ptp_port0_config.local_port_correct != 1:
+                local_port_format = "error"
+            else:
+                local_port_format = "correct"
+            if ptp_port0_config.sip_correct != 1:
+                sip_format = "error"
+            else:
+                sip_format = "correct"
+            if ptp_port0_config.smac_correct != 1:
+                smac_format = "error"
+            else:
+                smac_format = "correct"
+            if ptp_port0_config.source_port_correct != 1:
+                source_port_format = "error"
+            else:
+                source_port_format = "correct"
+            buf1 = "local port format" + local_port_format + "sip format" + sip_format + "smac format" + smac_format + "source port format" + source_port_format
+        if ip_format_error == "error" or  mac_format_error  == "error" or vlan_format_error == "error" or out_vlan_format_error == "error" or tpid_format_error == "error":
+            buf = "dip format " + ip_format_error + "mac format" + mac_format_error + "vlan format" + vlan_format_error + "out vlan format" + out_vlan_format_error + "tpid format" + tpid_format_error
+        #setup 6 pack whiletable_buf
+        #无vlan
+        if vlan_type == 0:
+            for i in range(6):
+                whiletable_buf[i] = mac_buf[i]
+        #一层vlan
+        elif vlan_type == 1:
+            whiletable_buf[0] = (vlan >> 8) & 0xff
+            whiletable_buf[1] = vlan&0xff
+            for i in range(6):
+                index = i + 2
+                whiletable_buf[index] = mac_buf[i]
+        #2层vlan
+        elif vlan_type == 2:
+            #tpisd
+            whiletable_buf[0] = (tpid >> 8) & 0xff
+            whiletable_buf[1] = tpid&0xff
+            #out_vlan
+            whiletable_buf[0] = (out_vlan >> 8) & 0xff
+            whiletable_buf[1] = out_vlan&0xff
+            #innervlan
+            whiletable_buf[0] = (vlan >> 8) & 0xff
+            whiletable_buf[1] = vlan&0xff
+            for i in range(6):
+                index = i + 6
+                whiletable_buf[index] = mac_buf[i] 
+                
+        kylin_api.kylin_ptp_whitetable_set.argtypes = [c_uint32,c_uint32, c_uint32,  POINTER(c_uint16)]
+        kylin_api.kylin_smac_set(0, 0, type, whiletable_buf)
+        
+        # setup 7 set dipS
+        #ipv4
+        if ptp_port0_config.stream_data_type == 1:
+            # 判断是不是slave口
+            if ptp_port0_config.slave_select == 0:
+                kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
+                reg_write = cmd_reg_t()
+                reg_write.reg = 0x5c4940
+                reg_write.data = (dip_buf[0] << 24) |  (dip_buf[1] << 16) |  (dip_buf[2] << 8) |  (dip_buf[3])  
+                kylin_api.kylin_reg_set(byref(reg_write), 1)
+            else:
+                kylin_api.kylin_ptp_table5_set.argtypes = [c_uint32,c_uint32, POINTER(c_uint8)]
+                kylin_api.kylin_ptp_table5_set(0, 0, dip_buf)
+        elif ptp_port0_config.stream_data_type == 2:
+            if ptp_port0_config.slave_select == 0:
+                kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
+                reg_write = cmd_reg_t()
+                reg_write.reg = 0x5c4940
+                reg_write.data = (dip_buf[0] << 24) |  (dip_buf[1] << 16) |  (dip_buf[2] << 8) |  (dip_buf[3])  
+                kylin_api.kylin_reg_set(byref(reg_write), 1)
+                reg_write.reg = 0x5c4944
+                reg_write.data = (dip_buf[4] << 24) |  (dip_buf[5] << 16) |  (dip_buf[6] << 8) |  (dip_buf[7])  
+                kylin_api.kylin_reg_set(byref(reg_write), 1)
+                reg_write.reg = 0x5c4948
+                reg_write.data = (dip_buf[8] << 24) |  (dip_buf[9] << 16) |  (dip_buf[10] << 8) |  (dip_buf[11])  
+                kylin_api.kylin_reg_set(byref(reg_write), 1)
+                reg_write.reg = 0x5c494c
+                reg_write.data = (dip_buf[12] << 24) |  (dip_buf[13] << 16) |  (dip_buf[14] << 8) |  (dip_buf[15])  
+                kylin_api.kylin_reg_set(byref(reg_write), 1)
+            else:
+                kylin_api.kylin_ptp_table5_set.argtypes = [c_uint32,c_uint32, POINTER(c_uint8)]
+                kylin_api.kylin_ptp_table5_set(0, 0, dip_buf)
+        #this is coonfig whitetable
+        # port index type val 
+       
+            
+        #setup 8 build table4    
+        #config table 4 config dmac and vlan
+        table4 = ptp_table4_tag()
+        for i in range(0, 6):
+            #判断组播还是单播，组播mac是固定的
+            if ptp_port0_config.cast_type == 1:
+                table4.mac[i] = mac_buf[i]
+            elif ptp_port0_config.cast_type == 0:
+                table4.mac[i] = multicast_mac_buf[i]
+        #一层vlan
+        if vlan_type == 1:
+            table4.innervlan  = vlan
+        #2层vlan
+        elif vlan_type == 2:
+            #tpisd
+            table4.innervlan = vlan
+            #out_vlan
+            table4.outervlan = out_vlan
+            #innervlan
+            table4.tpid = tpid
+            
+        kylin_api.kylin_ptp_table4_set.argvtypes = [c_uint32, c_uint32, POINTER(ptp_table4_tag)]
+        kylin_api.kylin_ptp_table4_set(0, 0, byref(table4))
+        
+        #setup 9 set dmac reg 
+        kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
+        reg_write = cmd_reg_t()
+        reg_write.reg = 0x5c6938
+        #判断组播还是单播，组播mac是固定的
+        if ptp_port0_config.cast_type == 1:
+            reg_write.data = (mac_buf[0] << 8) | mac_buf[1]
+        elif ptp_port0_config.cast_type == 0:
+            reg_write.data = (multicast_mac_buf[0] << 8) | multicast_mac_buf[1]
+        kylin_api.kylin_reg_set(byref(reg_write), 1)
+        
+        reg_write.reg = 0x5c693c
+        #判断组播还是单播，组播mac是固定的
+        if ptp_port0_config.cast_type == 1:
+            reg_write.data = (mac_buf[2] << 24) |  (mac_buf[3] << 16) |  (mac_buf[4] << 8) |  (mac_buf[5]) 
+        elif ptp_port0_config.cast_type == 0:
+            reg_write.data = (multicast_mac_buf[2] << 24) |  (multicast_mac_buf[3] << 16) |  (multicast_mac_buf[4] << 8) |  (multicast_mac_buf[5]) 
+        kylin_api.kylin_reg_set(byref(reg_write), 1)
+        
+        kylin_api.kylin_reg_set(byref(reg_write), 1)
+         
+        #setup 10 配置组播vlan
+        kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
+        reg_write = cmd_reg_t()
+        reg_write.reg = 0x5c4950
+        reg_write.data = (out_vlan << 16) | vlan
+        kylin_api.kylin_reg_set(byref(reg_write), 1)
+        
+        reg_write.reg = 0x5c4954
+        reg_write.data = tpid
+        kylin_api.kylin_reg_set(byref(reg_write), 1)
+
     
     @pyqtSlot(str)
     def on_lineEdit_dip_textChanged(self, p0):
@@ -612,39 +788,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         @param p0 DESCRIPTION
         @type str
         """
-        ipaddr = self.lineEdit_SIP.text()
-        # current select is ipv4 or ipv6
-        if self.ptp_stream_type == 1 or self.ptp_stream_type == 4:
-            compile_ip=re.compile('^(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|[1-9])\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)$')
-            if compile_ip.match(ipaddr):
-                print("ipv4 correnct")
-                self.ptp_port0_config.sip_correct = 1
-                ptp_port0_config.sip
-                sip_type = c_uint8 * 16
-                sip_buf = sip_type()
-                sip_list = ipaddr.split(".", ipaddr.count("."))
-                for i in range(0, ipaddr.count(".") + 1):
-                    sip_list[i] = int(sip_list[i])
-                    sip_buf[i] = sip_list[i] & 0xff
-                    print("%d"%(sip_buf[i]))
-                kylin_api.kylin_sip_set.argvtypes = [c_int, POINTER(c_uint8)]
-                kylin_api.kylin_sip_set(0, sip_buf)
-                
-            else:
-                print("ipv4 is error")
-        #ipv6
-        elif self.ptp_stream_type == 2 or self.ptp_stream_type == 5:
-            compile_ip = re.compile('^((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:)|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}(:[0-9A-Fa-f]{1,4}){1,2})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){1,3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){1,4})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){1,5})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){1,6})|(:(:[0-9A-Fa-f]{1,4}){1,7})|(([0-9A-Fa-f]{1,4}:){6}(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|([0-9A-Fa-f]{1,4}:(:[0-9A-Fa-f]{1,4}){0,4}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3})|(:(:[0-9A-Fa-f]{1,4}){0,5}:(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}))$')
-            if compile_ip.match(ipaddr):
-                print("correnct")
-                self.ptp_port0_config.sip_correct = 1
-                sip_type = c_uint8 * 16
-                sip_buf = sip_type()
-                sip_buf = self.upack_ipv6(ipaddr)
-                kylin_api.kylin_sip_set.argvtypes = [c_int, POINTER(c_uint8)]
-                kylin_api.kylin_sip_set(0, sip_buf)
-            else:
-                print("error")
+        
                 
     @pyqtSlot()
     def on_checkBox_flow0_clicked(self):
@@ -766,7 +910,6 @@ except:
    print ("Error: unable to start thread" )  
  """  
 
-print("-------------main---------------")
 if __name__ == "__main__":
     
     try:
@@ -776,7 +919,6 @@ if __name__ == "__main__":
        print ("Error: unable to start thread" )  
     app = QtWidgets.QApplication(sys.argv)
     ui = MainWindow()
-    print("------------show-----------------")
     ui.show()
     sys.exit(app.exec_())
     
