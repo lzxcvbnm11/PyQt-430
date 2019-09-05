@@ -20,7 +20,7 @@
       <x>0</x>
       <y>0</y>
       <width>921</width>
-      <height>461</height>
+      <height>531</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -708,7 +708,7 @@
        <rect>
         <x>20</x>
         <y>220</y>
-        <width>761</width>
+        <width>791</width>
         <height>81</height>
        </rect>
       </property>
@@ -726,16 +726,42 @@
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QRadioButton" name="radioButton_3">
+         <widget class="QRadioButton" name="radioButton_automode">
           <property name="text">
            <string>自动模式</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="radioButton_4">
+         <widget class="QRadioButton" name="radioButton_manual">
           <property name="text">
            <string>手动模式</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>620</x>
+         <y>39</y>
+         <width>91</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_26">
+          <property name="text">
+           <string>统计端口</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="spinBox_statistics">
+          <property name="maximum">
+           <number>31</number>
           </property>
          </widget>
         </item>
@@ -876,19 +902,6 @@
         <string>因为白名单必须填写dmac和dip；组播不用填写vlan，单播必须填写</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_config">
-       <property name="geometry">
-        <rect>
-         <x>430</x>
-         <y>90</y>
-         <width>75</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>配置</string>
-       </property>
-      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_10">
       <property name="geometry">
@@ -991,8 +1004,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>891</width>
-        <height>22</height>
+        <width>841</width>
+        <height>25</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_35">
@@ -1073,20 +1086,33 @@
        </item>
       </layout>
      </widget>
+     <widget class="QPushButton" name="pushButton_4">
+      <property name="geometry">
+       <rect>
+        <x>840</x>
+        <y>0</y>
+        <width>51</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>刷新</string>
+      </property>
+     </widget>
      <widget class="QWidget" name="horizontalLayoutWidget_33">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>20</y>
-        <width>891</width>
-        <height>22</height>
+        <width>841</width>
+        <height>25</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_36">
        <item>
         <widget class="QCheckBox" name="checkBox_flow0_29">
          <property name="text">
-          <string>Flow01</string>
+          <string>Flow00</string>
          </property>
         </widget>
        </item>
@@ -1124,7 +1150,7 @@
        <item>
         <widget class="QLineEdit" name="lineEdit_dip_1">
          <property name="text">
-          <string/>
+          <string>192.168.1.100</string>
          </property>
         </widget>
        </item>
@@ -1157,6 +1183,2007 @@
        </item>
        <item>
         <widget class="QLineEdit" name="lineEdit_vlan_31"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_34">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>40</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_37">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_30">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_32">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_204">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_2"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_205">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_206">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_2">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_207">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_2"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_208">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_30"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_209">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_32"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_35">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>60</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_38">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_31">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_33">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_210">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_3"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_211">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_212">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_3">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_213">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_4"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_214">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_31"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_215">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_33"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_36">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>80</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_50">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_43">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_45">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_282">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_4"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_283">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_284">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_4">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_285">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_5"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_286">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_43"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_287">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_45"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_37">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>100</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_51">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_44">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_46">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_288">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_5"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_289">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_290">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_5">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_291">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_6"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_292">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_44"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_293">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_46"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_38">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>120</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_52">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_45">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_47">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_294">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_6"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_295">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_296">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_6">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_297">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_7"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_298">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_45"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_299">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_47"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_39">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>140</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_53">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_46">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_48">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_300">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_7"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_301">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_302">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_7">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_303">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_8"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_304">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_46"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_305">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_48"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_40">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>160</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_54">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_47">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_49">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_306">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_8"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_307">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_308">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_8">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_309">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_9"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_310">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_47"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_311">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_49"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_41">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>180</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_62">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_55">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_57">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_354">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_16"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_355">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_356">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_16">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_357">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_17"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_358">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_55"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_359">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_57"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_42">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>200</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_63">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_56">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_58">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_360">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_17"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_361">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_362">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_17">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_363">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_18"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_364">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_56"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_365">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_58"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_43">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>220</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_64">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_57">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_59">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_366">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_18"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_367">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_368">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_18">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_369">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_19"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_370">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_57"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_371">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_59"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_44">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>240</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_65">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_58">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_60">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_372">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_19"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_373">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_374">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_19">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_375">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_22"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_376">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_58"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_377">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_60"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_45">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>260</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_66">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_59">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_61">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_378">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_20"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_379">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_380">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_20">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_381">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_23"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_382">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_59"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_383">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_61"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_46">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>280</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_67">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_60">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_62">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_384">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_21"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_385">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_386">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_21">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_387">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_24"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_388">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_60"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_389">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_62"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_47">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>300</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_68">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_61">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_63">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_390">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_22"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_391">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_392">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_22">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_393">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_25"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_394">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_61"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_395">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_63"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_48">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>320</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_69">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_62">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_64">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_396">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_23"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_397">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_398">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_23">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_399">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_26"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_400">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_62"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_401">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_64"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_49">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>340</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_70">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_63">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_65">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_402">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_24"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_403">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_404">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_24">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_405">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_27"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_406">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_63"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_407">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_65"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_50">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>360</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_71">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_64">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_66">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_408">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_25"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_409">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_410">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_25">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_411">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_29"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_412">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_64"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_413">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_66"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_51">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>380</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_72">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_65">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_67">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_414">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_26"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_415">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_416">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_26">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_417">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_67"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_418">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_65"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_419">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_68"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_52">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>400</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_73">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_66">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_68">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_420">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_27"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_421">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_422">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_27">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_423">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_69"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_424">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_66"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_425">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_70"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_53">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>420</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_74">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_67">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_69">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_426">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_28"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_427">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_428">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_28">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_429">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_71"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_430">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_67"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_431">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_72"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_54">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>440</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_75">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_68">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_70">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_432">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_29"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_433">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_434">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_29">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_435">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_73"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_436">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_68"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_437">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_74"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_55">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>460</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_76">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_69">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_71">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_438">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_30"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_439">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_440">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_30">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_441">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_75"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_442">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_69"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_443">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_76"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_56">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>480</y>
+        <width>841</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_77">
+       <item>
+        <widget class="QCheckBox" name="checkBox_flow0_70">
+         <property name="text">
+          <string>Flow00</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="radioButton_72">
+         <property name="text">
+          <string>slave</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_444">
+         <property name="text">
+          <string>dmac</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dmac_31"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_445">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_446">
+         <property name="text">
+          <string>dip</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_dip_31">
+         <property name="text">
+          <string>192.168.1.100</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_447">
+         <property name="text">
+          <string>vlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_77"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_448">
+         <property name="text">
+          <string>outvlan</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_outvlan0_70"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_449">
+         <property name="text">
+          <string>tpid</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_vlan_78"/>
        </item>
       </layout>
      </widget>
@@ -1256,8 +3283,8 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>500</y>
+      <x>410</x>
+      <y>550</y>
       <width>75</width>
       <height>23</height>
      </rect>

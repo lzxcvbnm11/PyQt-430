@@ -16,7 +16,7 @@ cfun = cdll.LoadLibrary(p)
 #cfun=CDLL('adder.so')
 p = os.getcwd() + './WinC/kylin_api.so'
 kylin_api = cdll.LoadLibrary(p)
-#kylin_api = CDLL('kylin_api.so')
+#kylin_api = CDLL('WinC/kylin_api.so')
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QMainWindow,  QMessageBox
@@ -45,6 +45,8 @@ class PTP_PORT_config(Structure):
     ('source_port_correct', c_uint8),
     ('flow', c_uint32), 
     ('slave_select', c_uint8), 
+    ('auto_mode', c_uint8), 
+    ('flow_checked', c_uint8*32)
     ]
 class ptp_table4_tag(Structure):
     _fields_ = [
@@ -243,6 +245,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         @param p0 DESCRIPTION
         @type str
         """
+        #如果是二层以太网不需要ip
+        if self.ptp_port0_config.stream_data_type == 0:
+            self.ptp_port0_config.sip_correct = 1
+            return
         ipaddr = self.lineEdit_SIP.text()
         # current select is ipv4 or ipv6
         if self.ptp_stream_type == 1 or self.ptp_stream_type == 4:
@@ -250,7 +256,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if compile_ip.match(ipaddr):
                 print("ipv4 correnct")
                 self.ptp_port0_config.sip_correct = 1
-                ptp_port0_config.sip
                 sip_type = c_uint8 * 16
                 sip_buf = sip_type()
                 sip_list = ipaddr.split(".", ipaddr.count("."))
@@ -321,6 +326,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ptp_port0_config.cast_type = 1
         kylin_api.kylin_ptp_msg_cast_ctl_set.argvtypes = [c_uint32, c_uint32,  c_uint32 , c_uint32]
         kylin_api.kylin_ptp_msg_cast_ctl_set(0, cast_type, announce_index, event_index)
+        #配饰表项一，配置业务模式
+        kylin_api.kylin_ptp_table1_set.argvtypes = [c_uint32, c_uint32,c_uint32,c_uint32,c_uint32,c_uint32,c_uint32 ]
+        moduleId = 10
+        msg_tbl_flg_fld = 1
+        msg_tbl_log_itv = 2
+        # 1 is multicast 0 is unicast
+        msg_cast_type = 0 
+        msg_tbl_dly_th = 0
+        msg_tbl_stepwise = 0
+        kylin_api.kylin_ptp_table1_set(0,moduleId, msg_tbl_flg_fld,msg_tbl_log_itv, msg_cast_type,msg_tbl_dly_th, msg_tbl_stepwise)
         """
         print("unicast is checked")
         print("cfun" + str(cfun.add_int(1, 2)))
@@ -379,7 +394,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ptp_stream_type = self.comboBox_stream_type.currentIndex()
         kylin_api.kylin_ptp_header_set.argvtypes = [c_uint32,c_uint32,c_uint32,c_uint32,c_uint32, ]
         kylin_api.kylin_ptp_header_set(1, 0, 2, 0, self.ptp_stream_type + 1)
-        #print(str(self.ptp_stream_type))
+        # 0 is 以太网   1  ipv4   2 ipv6 
+        self.ptp_port0_config.stream_data_type = ptp_stream_type % 3
+        print(str(self.ptp_stream_type))
     @pyqtSlot(str)
     def on_lineEdit_ClockLevel_textChanged(self, p0):
         """
@@ -467,6 +484,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         @param p0 DESCRIPTION
         @type str
         """
+        if self.radioButton_automode.isChecked():
+            return
         portid_text = self.lineEdit_sourcePortId.text()
         #portid = re.compile('([1-9|A-F|a-f]{2}:){9}[1-9|A-F|a-f]{2}')
         portid = re.compile('^([1-9A-Fa-f]{2}:){9}[1-9A-Fa-f]{2}$')
@@ -538,6 +557,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         kylin_api.kylin_ptp_msg_cast_ctl_set.argvtypes = [c_uint32, c_uint32,  c_uint32 , c_uint32]
         kylin_api.kylin_ptp_msg_cast_ctl_set(0, cast_type, announce_index, event_index)
         #config table 1 业务模板内容
+        #配饰表项一，配置业务模式
+        kylin_api.kylin_ptp_table1_set.argvtypes = [c_uint32, c_uint32,c_uint32,c_uint32,c_uint32,c_uint32,c_uint32 ]
+        moduleId = 10
+        msg_tbl_flg_fld = 1
+        msg_tbl_log_itv = 2
+        # 1 is multicast 0 is unicast
+        msg_cast_type = 1
+        msg_tbl_dly_th = 0
+        msg_tbl_stepwise = 0
+        kylin_api.kylin_ptp_table1_set(0,moduleId, msg_tbl_flg_fld,msg_tbl_log_itv, msg_cast_type,msg_tbl_dly_th, msg_tbl_stepwise)
         
     @pyqtSlot(str)
     def on_lineEdit_dmac_textChanged(self, p0):
@@ -555,9 +584,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         vlan_format_error = "correct"
         out_vlan_format_error = "correct"
         tpid_format_error = "correct"
-        
-        # setup 1 构建白名单buff 和组播mac buf    
-        whiletable_type = c_uint8 *  18
+        #index 标识第几个流
+        flow_index = 0
+        clear_flag = 0
+        # setup 0 判断这个逻辑流又没有被选中
+        if self.checkBox_flow0.isChecked() != True:
+            #上一次的状态也是没有选中，所以点击刷新不需要动作
+            if self.ptp_port0_config.flow_checked[flow_index] == 0:
+                return;
+            else:
+                clear_flag = 1
+        # setup 1 构建白名单buff 和组播mac buf
+        whiletable_type = c_uint16 *  18
         whiletable_buf = whiletable_type() 
         multicast_mac_buf = whiletable_type()
         for i in range(6):
@@ -612,7 +650,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #setup 4 set dip
         ipaddr = self.lineEdit_SIP.text()
         dip_type = c_uint8 * 16
-        dip_buf = sip_type()
+        dip_buf = dip_type()
         # current select is ipv4 or ipv6
         if self.ptp_stream_type == 1 or self.ptp_stream_type == 4:
             compile_ip=re.compile('^(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|[1-9])\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)$')
@@ -661,14 +699,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #无vlan
         if vlan_type == 0:
             for i in range(6):
-                whiletable_buf[i] = mac_buf[i]
+                whiletable_buf[i] = (mac_buf[i]<<8) | 0xff
         #一层vlan
         elif vlan_type == 1:
             whiletable_buf[0] = (vlan >> 8) & 0xff
             whiletable_buf[1] = vlan&0xff
             for i in range(6):
                 index = i + 2
-                whiletable_buf[index] = mac_buf[i]
+                whiletable_buf[index] = (mac_buf[i]<<8) | 0xff
         #2层vlan
         elif vlan_type == 2:
             #tpisd
@@ -682,10 +720,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             whiletable_buf[1] = vlan&0xff
             for i in range(6):
                 index = i + 6
-                whiletable_buf[index] = mac_buf[i] 
-                
+                whiletable_buf[index] = (mac_buf[i]<<8) | 0xff
+        #需要发送ff
+        if clear_flag == 1:
+            for i in range(16):
+                whiletable_buf[i] = 0xffff
         kylin_api.kylin_ptp_whitetable_set.argtypes = [c_uint32,c_uint32, c_uint32,  POINTER(c_uint16)]
-        kylin_api.kylin_smac_set(0, 0, type, whiletable_buf)
+        kylin_api.kylin_ptp_whitetable_set(0, flow_index, type, whiletable_buf)
         
         # setup 7 set dipS
         #ipv4
@@ -699,7 +740,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 kylin_api.kylin_reg_set(byref(reg_write), 1)
             else:
                 kylin_api.kylin_ptp_table5_set.argtypes = [c_uint32,c_uint32, POINTER(c_uint8)]
-                kylin_api.kylin_ptp_table5_set(0, 0, dip_buf)
+                kylin_api.kylin_ptp_table5_set(0, flow_index, dip_buf)
         elif ptp_port0_config.stream_data_type == 2:
             if ptp_port0_config.slave_select == 0:
                 kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
@@ -718,13 +759,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 kylin_api.kylin_reg_set(byref(reg_write), 1)
             else:
                 kylin_api.kylin_ptp_table5_set.argtypes = [c_uint32,c_uint32, POINTER(c_uint8)]
-                kylin_api.kylin_ptp_table5_set(0, 0, dip_buf)
+                kylin_api.kylin_ptp_table5_set(0, flow_index, dip_buf)
         #this is coonfig whitetable
         # port index type val 
        
             
         #setup 8 build table4    
         #config table 4 config dmac and vlan
+        if clear_flag == 1:
+            for i in range(6):
+                mac_buf[i] = 0xffff
+            vlan = 0xffff
+            out_vlan = 0xffff
+            tpid = 0xffff
         table4 = ptp_table4_tag()
         for i in range(0, 6):
             #判断组播还是单播，组播mac是固定的
@@ -745,8 +792,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             table4.tpid = tpid
             
         kylin_api.kylin_ptp_table4_set.argvtypes = [c_uint32, c_uint32, POINTER(ptp_table4_tag)]
-        kylin_api.kylin_ptp_table4_set(0, 0, byref(table4))
+        kylin_api.kylin_ptp_table4_set(0, flow_index, byref(table4))
         
+        #clear 不会清除 对寄存器的 mac 和 valn 
         #setup 9 set dmac reg 
         kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
         reg_write = cmd_reg_t()
@@ -801,9 +849,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         reg_write.reg = 0x5c4aa0
         reg_write.data = 6
         """
-        kylin_api.kylin_ptp_table0_set.argvtypes = [c_uint32, c_uint32, c_uint32, c_uint32, c_uint32, c_uint32]
-        kylin_api.kylin_ptp_table0_set(0, 1, 10, 0x84, 2)
-        # 如果是组播  加在slave 判断 的组播vlan  0x5c4950 
+        flow_index = 0
+        if self.checkBox_flow0.isChecked():
+            #配置表项0 
+            kylin_api.kylin_ptp_table0_set.argvtypes = [c_uint32, c_uint32, c_uint32, c_uint32, c_uint32, c_uint32]
+            kylin_api.kylin_ptp_table0_set(0, 1, 10, 0x84, 2)
+            # 如果是组播  加在slave 判断 的组播vlan  0x5c4950 
+            #如果是手动动模式
+            if ptp_port0_config.auto_mode != 1:
+                if slave_mode == 1:
+                    kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
+                    reg_write = cmd_reg_t()
+                    reg_write.reg = 0x5c4818
+                    #选择slave模式
+                    reg_write.data = 2
+                    kylin_api.kylin_reg_set(byref(reg_write), 1)
+                
+                    reg_write.reg = 0x5c4848
+                    #选择逻辑口0作为slave
+                    reg_write.data = flow_index
+                    kylin_api.kylin_reg_set(byref(reg_write), 1)
+            
     
     
     @pyqtSlot(str)
@@ -827,14 +893,77 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             reg_write = cmd_reg_t()
             reg_write.reg = 0x5c4950
             reg_write.data = vlan
-            kylin_api.kylin_reg_set(byref(reg_write), )
+            kylin_api.kylin_reg_set(byref(reg_write), 1)
         elif self.ptp_port0_config.vlan_type == 2:
             kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
             reg_write = cmd_reg_t()
             reg_write.reg = 0x5c4950
             reg_write.data = vlan
-            kylin_api.kylin_reg_set(byref(reg_write), )
+            kylin_api.kylin_reg_set(byref(reg_write), 1)
+        
+    @pyqtSlot(int)
+    def on_spinBox_statistics_valueChanged(self, p0):
+        """
+        Slot documentation goes here.
+        
+        @param p0 DESCRIPTION
+        @type int
+        """
+        """
+        配置统计端口
+        """
+        flow_value = self.spinBox_statistics.value()
+        kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
+        reg_write = cmd_reg_t()
+        reg_write.reg = 0x5c4a0c
+        reg_write.data = flow_value
+        kylin_api.kylin_reg_set(byref(reg_write), 1)
+    def ptp_port0_init(self):
+        """
+        配置业务模板，和模式使能
+        """
+        # 模式使能
+        kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
+        reg_write = cmd_reg_t()
+        reg_write.reg = 0x5c4814
+        reg_write.data = 1
+        kylin_api.kylin_reg_set(byref(reg_write), 1)
+    
+    @pyqtSlot()
+    def on_radioButton_automode_clicked(self):
+        """
+        Slot documentation goes here.
+        """
+        if self.radioButton_automode.isChecked() :
+            if self.ptp_port0_config.slave_select != 0xff:
+                kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
+                reg_write = cmd_reg_t()
+                reg_write.reg = 0x5c4818
+                #选择slave模式
+                reg_write.data = 3
+                kylin_api.kylin_reg_set(byref(reg_write), 1)
+                
+                reg_write.reg = 0x5c4848
+                #选择逻辑口0作为slave
+                reg_write.data = self.ptp_port0_config.slave_select
+                kylin_api.kylin_reg_set(byref(reg_write), 1)
+        reg_write.reg = 0x5c481c
+        reg_write.data = 1
+        kylin_api.kylin_reg_set(byref(reg_write), 1)
+    
+    @pyqtSlot()
+    def on_radioButton_manual_clicked(self):
+        """
+        Slot documentation goes here.
+        """
+        if self.radioButton_automode.isChecked():
+            kylin_api.kylin_reg_set.argvtypes = [POINTER(cmd_reg_t), c_int]
+            reg_write = cmd_reg_t()
+            reg_write.reg = 0x5c481c
+            reg_write.data = 0
+            kylin_api.kylin_reg_set(byref(reg_write), 1)
             
+
 """
 这是创建线程，读取socket
 """
