@@ -541,6 +541,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         kylin_api.kylin_ptp_msg_cast_ctl_set.argvtypes = [c_uint32, c_uint32,  c_uint32 , c_uint32]
         kylin_api.kylin_ptp_msg_cast_ctl_set(0, cast_type, announce_index, event_index)
     
+    def forbid_multicase_master_vlan(self, True_or_False):
+        #这里没有完成内容，要配置配置所有的master逻辑流
+        self.lineEdit_ClockLevel.clear()
+        self.lineEdit_ClockLevel.setEnabled(True_or_False)
+        #multicast = QtWidgets.QLineEdit(self.lineEdit_ClockLevel)
+        #multicast.setFocusPolicy(QtCore.Qt.NoFocus)
+    
     @pyqtSlot(bool)
     def on_radioButton_multicase_clicked(self, checked):
         """
@@ -549,6 +556,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         @param checked DESCRIPTION
         @type bool
         """
+        self.forbid_multicase_master_vlan(False)
+        return
         announce_index = self.comboBox_announce_rate.currentIndex()
         event_index = self.comboBox_event_rate.currentIndex()
         cast_type = self.radioButton_unicast.isChecked()
