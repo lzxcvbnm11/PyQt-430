@@ -543,13 +543,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     def forbid_multicase_master_vlan(self, True_or_False):
         #这里没有完成内容，要配置配置所有的master逻辑流
-        self.lineEdit_ClockLevel.clear()
-        self.lineEdit_ClockLevel.setEnabled(True_or_False)
+        self.lineEdit_ptp0_ClockLevel.clear()
+        self.lineEdit_ptp0_ClockLevel.setEnabled(True_or_False)
+        self.radioButton_ptp0_vlan.setEnabled(False)
         #multicast = QtWidgets.QLineEdit(self.lineEdit_ClockLevel)
         #multicast.setFocusPolicy(QtCore.Qt.NoFocus)
     
     @pyqtSlot(bool)
-    def on_radioButton_multicase_clicked(self, checked):
+    def on_radioButton_ptp0_multicase_clicked(self, checked):
         """
         Slot documentation goes here.
         
